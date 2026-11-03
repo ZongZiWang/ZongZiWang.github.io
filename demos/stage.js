@@ -26,6 +26,10 @@
   .stage-root{position:relative;overflow:hidden;background:#fff;color:#111;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;line-height:1.4;text-align:left}
   .stage-root *{box-sizing:border-box}
   .stage-err{padding:40px;font:14px monospace;color:#b00}
+  .stage-ov{overscroll-behavior:contain;touch-action:manipulation;height:100dvh}
+  .stage-root,.stage-root *{touch-action:manipulation}
+  /* iOS zooms the whole page when focusing inputs smaller than 16px; keep it from doing that */
+  @media (pointer:coarse){.stage-root input,.stage-root textarea,.stage-root select,.stage-root [contenteditable]{font-size:16px!important}}
   .stage-hint{display:none;color:#8d8a94;font:500 12px 'JetBrains Mono',monospace;text-align:center}
   @media (max-width:760px){
     .stage-ov{padding:10px 0 0;gap:8px;justify-content:flex-start}
@@ -73,21 +77,26 @@
     dev.style.transformOrigin='0 0';dev.style.position='absolute';dev.style.left='0';dev.style.top='0';dev.style.width='max-content';
     // natural size of the device (unscaled)
     const nat=()=>{dev.style.transform='none';const r=dev.getBoundingClientRect();return[r.width,r.height]};
-    const fit=()=>{const [w,h]=nat();const box=fitBox.getBoundingClientRect();
-      let s=Math.min(1,box.width/w,box.height/h);
+    // On phones the viewport height jumps around while you interact (on-screen keyboard,
+    // Safari's toolbar collapsing). Remember the tallest box we've seen for this width and
+    // never shrink the demo because of a temporary height change.
+    let lastW=0,maxBoxH=0;
+    const fit=(force)=>{const [w,h]=nat();const box=fitBox.getBoundingClientRect();
+      if(box.width!==lastW||force===true){lastW=box.width;maxBoxH=box.height}else{maxBoxH=Math.max(maxBoxH,box.height)}
+      let s=Math.min(1,box.width/w,maxBoxH/h);
       const small=window.innerWidth<=760;
       // desktop-sized demos on a phone: don't shrink below 55%; let the visitor pan around instead
       const pan=small&&kind!=='phone'&&s<0.55;
-      if(pan){s=Math.min(0.55,(box.height-10)/h)}
+      if(pan){s=Math.min(0.55,(maxBoxH-10)/h)}
       fitBox.classList.toggle('pan',pan);
       hint.textContent=pan?(window.innerHeight>window.innerWidth?'Desktop demo · drag to pan, or rotate your phone':'Drag to pan around'):'';
       hint.classList.toggle('show',pan);
       dev.style.transform=`scale(${s})`;sizer.style.width=w*s+'px';sizer.style.height=h*s+'px';current.scale=s};
-    fit();current.fit=fit;window.addEventListener('resize',fit);
+    fit(true);current.fit=()=>fit(true);current.onResize=()=>fit();window.addEventListener('resize',current.onResize);
     try{current.cleanup=d.mount(root)||null}catch(e){root.innerHTML=`<div class="stage-err">${e.stack}</div>`;console.error(e)}
     root.focus({preventScroll:true});
   };
   window.closeDemo=function(){if(!current)return;try{current.cleanup&&current.cleanup()}catch(e){}
-    window.removeEventListener('resize',current.fit);current.ov.remove();current=null;window.demoOpen=false;document.body.style.overflow=''};
+    window.removeEventListener('resize',current.onResize);current.ov.remove();current=null;window.demoOpen=false;document.body.style.overflow=''};
   document.addEventListener('keydown',e=>{if(current&&e.key==='Escape'){e.stopPropagation();closeDemo()}},true);
 })();
