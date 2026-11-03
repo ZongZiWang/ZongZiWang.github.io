@@ -25,7 +25,19 @@
   .stage-dev.tablet .scr{border-radius:14px;overflow:hidden;position:relative}
   .stage-root{position:relative;overflow:hidden;background:#fff;color:#111;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;line-height:1.4;text-align:left}
   .stage-root *{box-sizing:border-box}
-  .stage-err{padding:40px;font:14px monospace;color:#b00}`;
+  .stage-err{padding:40px;font:14px monospace;color:#b00}
+  .stage-hint{display:none;color:#8d8a94;font:500 12px 'JetBrains Mono',monospace;text-align:center}
+  @media (max-width:760px){
+    .stage-ov{padding:10px 0 0;gap:8px;justify-content:flex-start}
+    .stage-top{padding:0 12px}
+    .stage-top .cap{font-size:11px}
+    .stage-x{padding:10px 14px;min-height:40px;white-space:nowrap;flex:none}
+    .stage-fit.pan{overflow:auto;-webkit-overflow-scrolling:touch;align-items:flex-start;justify-content:flex-start;padding:0 10px 10px}
+    .stage-dev.phone,.stage-dev.tablet{border-radius:0;padding:0;border:0;background:none}
+    .stage-dev.phone .scr,.stage-dev.tablet .scr{border-radius:16px}
+    .stage-dev.phone .scr::before{display:none}
+    .stage-hint.show{display:block}
+  }`;
   const st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
 
   function load(id){
@@ -37,7 +49,7 @@
   window.openDemo=async function(id){
     closeDemo();
     const ov=document.createElement('div');ov.className='stage-ov';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');
-    ov.innerHTML=`<div class="stage-top"><div><b class="t">Loading…</b><div class="cap"></div></div><button class="stage-x">✕ Close (Esc)</button></div><div class="stage-fit"></div>`;
+    ov.innerHTML=`<div class="stage-top"><div><b class="t">Loading…</b><div class="cap"></div></div><button class="stage-x">✕ Close</button></div><div class="stage-fit"></div>`;
     document.body.appendChild(ov);requestAnimationFrame(()=>ov.classList.add('show'));
     window.demoOpen=true;document.body.style.overflow='hidden';
     current={ov,cleanup:null};
@@ -52,10 +64,23 @@
     const root=document.createElement('div');root.className='stage-root demo-'+id;root.style.width=W+'px';root.style.height=H+'px';root.tabIndex=0;
     if(kind==='browser'){dev.innerHTML=`<div class="chrome"><i></i><i></i><i></i><span>${d.url||''}</span></div>`;dev.appendChild(root)}
     else{const scr=document.createElement('div');scr.className='scr';scr.appendChild(root);dev.appendChild(scr)}
-    ov.querySelector('.stage-fit').appendChild(dev);
-    const fit=()=>{const box=ov.querySelector('.stage-fit').getBoundingClientRect();const r=dev.getBoundingClientRect();
-      const w=r.width/(current.scale||1),h=r.height/(current.scale||1);const s=Math.min(1,box.width/w,box.height/h);current.scale=s;dev.style.transform=`scale(${s})`};
-    current.scale=1;fit();current.fit=fit;window.addEventListener('resize',fit);
+    const fitBox=ov.querySelector('.stage-fit');
+    const sizer=document.createElement('div');sizer.style.cssText='position:relative;flex:none';sizer.appendChild(dev);fitBox.appendChild(sizer);
+    const hint=document.createElement('div');hint.className='stage-hint';ov.insertBefore(hint,fitBox);
+    dev.style.transformOrigin='0 0';
+    // natural size of the device (unscaled)
+    const nat=()=>{dev.style.transform='none';const r=dev.getBoundingClientRect();return[r.width,r.height]};
+    const fit=()=>{const [w,h]=nat();const box=fitBox.getBoundingClientRect();
+      let s=Math.min(1,box.width/w,box.height/h);
+      const small=window.innerWidth<=760;
+      // desktop-sized demos on a phone: don't shrink below 55%; let the visitor pan around instead
+      const pan=small&&kind!=='phone'&&s<0.55;
+      if(pan){s=Math.min(0.55,(box.height-10)/h)}
+      fitBox.classList.toggle('pan',pan);
+      hint.textContent=pan?(window.innerHeight>window.innerWidth?'Desktop demo · drag to pan, or rotate your phone':'Drag to pan around'):'';
+      hint.classList.toggle('show',pan);
+      dev.style.transform=`scale(${s})`;sizer.style.width=w*s+'px';sizer.style.height=h*s+'px';current.scale=s};
+    fit();current.fit=fit;window.addEventListener('resize',fit);
     try{current.cleanup=d.mount(root)||null}catch(e){root.innerHTML=`<div class="stage-err">${e.stack}</div>`;console.error(e)}
     root.focus({preventScroll:true});
   };

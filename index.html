@@ -170,6 +170,44 @@ section{padding:88px 0;border-top:1px solid var(--line);scroll-margin-top:40px}
 .legend i{width:18px;height:6px;border-radius:3px;background:var(--c)}
 @media (max-width:860px){.grid-wrap{grid-template-columns:1fr}.report{position:static}.grid-track{column-gap:16px;padding:30px 10px 86px}.slot .name{font-size:9px;max-width:40%}}
 
+
+/* touch + small screens */
+.touch-only{display:none}
+@media (hover:none),(pointer:coarse){.kb-only{display:none!important}.touch-only{display:inline}}
+.sheet-x{display:none}
+.livery{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.lv-l{font:600 11px var(--mono);color:var(--mute);letter-spacing:.08em;text-transform:uppercase;margin-right:4px}
+.lv{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:#141317;color:var(--ink);border-radius:999px;padding:7px 12px;font:600 12px var(--mono);cursor:pointer;min-height:36px}
+.lv i{width:16px;height:10px;border-radius:3px;background:linear-gradient(90deg,var(--c) 60%,var(--c2) 0)}
+.lv.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.dash.driving .livery,.dash.driving .drive-help.touch-only{display:none}
+button,a,.slot,.lap{-webkit-tap-highlight-color:transparent}
+.key,.pad button,.slot{touch-action:manipulation}
+@media (max-width:860px){
+  .bar{flex-direction:column;align-items:stretch;gap:8px;padding:8px 16px}
+  .bar nav{display:flex!important;gap:6px;overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap;margin:0 -16px;padding:0 16px}
+  .bar nav::-webkit-scrollbar{display:none}
+  .bar nav a{flex:none;border:1px solid var(--line);border-radius:999px;padding:6px 12px;color:var(--ink);font-size:11px}
+  .bar nav kbd{display:none}
+  section{padding:64px 0;scroll-margin-top:84px}
+  .hero{padding:40px 0 24px}
+  .lede{font-size:17px}
+  .btn{min-height:44px}
+  .grid-top{flex-wrap:wrap}
+  .report{display:none}
+  .report.sheet{display:block;position:fixed;left:0;right:0;bottom:0;top:auto;z-index:60;border-radius:20px 20px 0 0;max-height:78vh;overflow:auto;
+    padding:22px 20px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -20px 60px rgba(0,0,0,.6);animation:sheetUp .25s ease-out;min-height:0}
+  .report.sheet .sheet-x{display:block;position:absolute;right:14px;top:14px;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:#141317;color:var(--ink);font:700 14px var(--mono)}
+  body.sheet-open::after{content:'';position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:55}
+  .slot{height:88px}
+  .dash{padding:12px}
+  .dash-read b{font-size:17px}
+  .pad{grid-template-columns:64px 64px 1fr 84px 84px}
+  .contact h2{font-size:38px}
+  footer{flex-direction:column}
+}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:none}}
+
 /* contact */
 .contact{text-align:left}
 .contact h2{font-size:clamp(36px,6vw,72px);font-weight:900;letter-spacing:-.04em;line-height:1}
@@ -196,7 +234,7 @@ footer{padding:40px 0 60px;color:var(--mute);font:500 12px var(--mono);display:f
 
 <div class="bar">
   <div class="live"><span class="dot"></span><span id="clock">SF —:—</span></div>
-  <nav>
+  <nav id="topnav">
     <a href="#work"><kbd>W</kbd>Work</a>
     <a href="#projects"><kbd>P</kbd>Projects</a>
     <a href="#keyboards"><kbd>K</kbd>Keyboards</a>
@@ -214,12 +252,12 @@ footer{padding:40px 0 60px;color:var(--mute);font:500 12px var(--mono);display:f
   <div class="board-wrap">
     <div class="board" id="board" aria-label="Interactive keyboard. Press W, P, K, T or C to jump to a section."></div>
   </div>
-  <div class="board-hint">Go ahead, type on it. Green keys jump to a section. <button class="sound" id="soundBtn" aria-pressed="false">🔇 sound off</button></div>
+  <div class="board-hint"><span class="kb-only">Go ahead, type on it. Green keys jump to a section.</span><span class="touch-only">Tap the keys. Green ones jump to a section.</span> <button class="sound" id="soundBtn" aria-pressed="false">🔇 sound off</button></div>
 </header>
 
 <section id="work"><div class="wrap">
   <div class="sec-h"><span class="k">W</span><h2>Career, as a timing sheet</h2></div>
-  <p class="sub">Every stint, fastest lap on top. Click a row for the telemetry.</p>
+  <p class="sub">Every stint, fastest lap on top. Tap a row for the telemetry.</p>
   <div class="tower" id="tower">
     <div class="tower-head"><span>Pos</span><span>Team</span><span class="h-role">Stint</span><span style="text-align:right">Lap</span></div>
   </div>
@@ -227,7 +265,7 @@ footer{padding:40px 0 60px;color:var(--mute);font:500 12px var(--mono);display:f
 
 <section id="projects"><div class="wrap">
   <div class="sec-h"><span class="k">P</span><h2>The starting grid</h2></div>
-  <p class="sub">Every project I've shipped, lined up in its team's livery. Click a car for the race report, or start the race.</p>
+  <p class="sub">Every project I've shipped, lined up in its team's livery. Tap a car for the race report and a live demo.</p>
   <div class="grid-top">
     <div class="lights" id="lights" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
     <button class="btn ghost" id="lightsOut">🚦 Lights out</button>
@@ -275,9 +313,11 @@ footer{padding:40px 0 60px;color:var(--mute);font:500 12px var(--mono);display:f
         <div>CURRENT<b id="lapTime">0:00.000</b></div>
         <div id="bestLbl">BEST<b id="delta">—</b></div>
       </div>
+      <div class="livery" id="livery" aria-label="Pick your car"></div>
       <div class="drive-bar">
-        <button class="btn" id="driveBtn">🏎 Drive <span id="driveCar" class="mono" style="opacity:.6">Spectre</span></button>
-        <span class="drive-help">↑/W throttle · ↓/S brake · ←→/AD steer · R reset · Esc exit</span>
+        <button class="btn" id="driveBtn">🏎 Drive</button>
+        <span class="drive-help kb-only">↑/W throttle · ↓/S brake · ←→/AD steer · R reset · Esc exit</span>
+        <span class="drive-help touch-only">Use the on-screen pedals and steering below.</span>
       </div>
       <div class="pad" id="pad" aria-hidden="true">
         <button data-k="left">◀</button><button data-k="right">▶</button><span></span><button data-k="down">BRAKE</button><button data-k="up" class="gas">GAS</button>
@@ -304,13 +344,18 @@ footer{padding:40px 0 60px;color:var(--mute);font:500 12px var(--mono);display:f
     <a class="btn ghost" href="https://www.youtube.com/@ZongZiWang" target="_blank" rel="noopener">YouTube ↗</a>
   </div>
 </div>
-<footer class="wrap"><span>© <span id="yr"></span> Joey Wang · built by hand, like the keyboards</span><span>tip: try the Konami code</span></footer>
+<footer class="wrap"><span>© <span id="yr"></span> Joey Wang · built by hand, like the keyboards</span><span class="kb-only">tip: try the Konami code</span></footer>
 </section>
 
 <div class="toast" id="toast"></div>
 <script src="demos/stage.js"></script>
 
 <script>
+/* keep the page's own styles out of the product demos (they render inside .stage-root) */
+(function isolate(){const sh=document.querySelector('style');if(!sh||!sh.sheet)return;
+  const fix=sel=>sel.split(',').map(s=>{s=s.trim();if(!s||/^(html|body|:root)$/.test(s))return s;const i=s.indexOf('::');
+    return i>=0?s.slice(0,i)+':not(.stage-root *)'+s.slice(i):s+':not(.stage-root *)'}).join(',');
+  (function walk(rules){for(const r of rules){if(r.selectorText!==undefined&&r.type===1){try{r.selectorText=fix(r.selectorText)}catch(e){}}else if(r.cssRules&&r.type!==7)walk(r.cssRules)}})(sh.sheet.cssRules)})();
 const $=s=>document.querySelector(s);
 
 /* clock */
@@ -353,8 +398,8 @@ rows.forEach(r=>{const row=document.createElement('div');row.className='row';
     const b=document.createElement('button');b.className='key '+cls;b.style.setProperty('--w',w);b.textContent=label;b.tabIndex=-1;
     const nk=NAV[label];if(nk){b.classList.add('nav');b.dataset.label=nk[1]}
     const id=(code===' '?'Space':code).toLowerCase();(keyEls[id]=keyEls[id]||[]).push(b);
-    b.addEventListener('mousedown',()=>{press(id,true);if(nk)go(nk[0])});
-    b.addEventListener('mouseup',()=>press(id,false));b.addEventListener('mouseleave',()=>b.classList.remove('down'));
+    b.addEventListener('pointerdown',e=>{e.preventDefault();press(id,true);if(nk)go(nk[0])});
+    b.addEventListener('pointerup',()=>press(id,false));b.addEventListener('pointerleave',()=>b.classList.remove('down'));b.addEventListener('pointercancel',()=>b.classList.remove('down'));
     row.appendChild(b)});
   $('#board').appendChild(row)});
 function press(id,down){(keyEls[id]||[]).forEach(b=>b.classList.toggle('down',down));click(!down)}
@@ -422,14 +467,21 @@ function carSVG(t){const T=TEAMS[t];return `<svg class="car" viewBox="0 0 46 92"
 </svg>`}
 function showReport(i){const g=GRID[i],T=TEAMS[g.t];
   document.querySelectorAll('.slot').forEach((s,j)=>s.classList.toggle('sel',j===i));
-  $('#report').innerHTML=`<div class="pos">P${i+1}</div><div class="tm" style="--c:${T.c}"><i></i>${T.n}</div><h3>${g.name}</h3><p>${g.desc}</p><div class="meta">${g.role.toUpperCase()} · ${g.yr.toUpperCase()}</div>${g.link?`<p style="margin-top:12px"><a href="${g.link}" target="_blank" rel="noopener">Open ↗</a></p>`:''}<div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:8px"><button class="btn" style="margin:0" id="tryThis">▶ Try the demo</button><button class="btn ghost" style="margin:0" id="driveThis">🏎 Drive</button></div>`;
+  $('#report').innerHTML=`<button class="sheet-x" aria-label="Close">✕</button><div class="pos">P${i+1}</div><div class="tm" style="--c:${T.c}"><i></i>${T.n}</div><h3>${g.name}</h3><p>${g.desc}</p><div class="meta">${g.role.toUpperCase()} · ${g.yr.toUpperCase()}</div>${g.link?`<p style="margin-top:12px"><a href="${g.link}" target="_blank" rel="noopener">Open ↗</a></p>`:''}<div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:8px"><button class="btn" style="margin:0" id="tryThis">▶ Try the demo</button></div>`;
   $('#tryThis').onclick=()=>window.openDemo&&window.openDemo(g.id);
-  window.selCar=i;const dc=document.getElementById('driveCar');if(dc)dc.textContent=g.name;
-  $('#driveThis').onclick=()=>window.startDrive&&window.startDrive()}
+  if(window.matchMedia('(max-width:860px)').matches&&window.__gridReady)openSheet()}
+/* mobile: show the race report as a bottom sheet instead of far below the grid */
+function openSheet(){const r=$('#report');r.classList.add('sheet');document.body.classList.add('sheet-open')}
+function closeSheet(){$('#report').classList.remove('sheet');document.body.classList.remove('sheet-open')}
+let sheetY=0;new MutationObserver(()=>{if(document.body.classList.contains('sheet-open'))sheetY=scrollY}).observe(document.body,{attributes:true,attributeFilter:['class']});
+addEventListener('scroll',()=>{if(document.body.classList.contains('sheet-open')&&!window.demoOpen&&Math.abs(scrollY-sheetY)>160)closeSheet()},{passive:true});
+document.querySelectorAll('#topnav a').forEach(a=>a.addEventListener('click',closeSheet));
+document.addEventListener('click',e=>{if(document.body.classList.contains('sheet-open')&&!e.target.closest('#report')&&!e.target.closest('.slot'))closeSheet()});
 GRID.forEach((g,i)=>{const d=document.createElement('div');d.className='slot'+(i%2?' even':'');
   d.innerHTML=`<span class="num">P${i+1}</span><span class="name">${g.name}</span>${carSVG(g.t)}`;
   d.onclick=()=>{click(false);showReport(i)};$('#grid').appendChild(d)});
-showReport(0);
+showReport(0);window.__gridReady=true;
+$('#report').addEventListener('click',e=>{if(e.target.closest('.sheet-x'))closeSheet()});
 $('#legend').innerHTML=Object.values(TEAMS).map(T=>`<span style="--c:${T.c}"><i></i>${T.n}</span>`).join('');
 let racing=false;
 $('#lightsOut').onclick=()=>{if(racing)return;racing=true;const L=[...document.querySelectorAll('#lights i')];
@@ -484,7 +536,13 @@ function resetCar(){const p=path[0],q=path[3];car={x:p[0],y:p[1],a:Math.atan2(q[
 window.startDrive=function(){driving=true;$('#dash').classList.add('driving');resetCar();lapNo=1;$('#lapNo').textContent=1;
   countdown=performance.now()+1800;lapT0=countdown;$('#dash').scrollIntoView({behavior:'smooth',block:'center'});cv.focus({preventScroll:true});$('#driveBtn').innerHTML='■ Exit';
   $('#delta').textContent=best?fmt(best):'—';$('#delta').className=''};
-function stopDrive(){driving=false;keys={};$('#dash').classList.remove('driving');$('#driveBtn').innerHTML=`🏎 Drive <span id="driveCar" class="mono" style="opacity:.6">${GRID[window.selCar||0].name}</span>`;demoStart=performance.now()}
+function stopDrive(){driving=false;keys={};$('#dash').classList.remove('driving');$('#driveBtn').innerHTML='🏎 Drive';demoStart=performance.now()}
+/* livery picker: one chip per team */
+window.selCar=0;
+(function(){const seen={};const el=$('#livery');el.innerHTML='<span class="lv-l">Pick your car</span>';
+  GRID.forEach((g,i)=>{if(seen[g.t])return;seen[g.t]=1;const T=TEAMS[g.t];const b=document.createElement('button');
+    b.className='lv'+(i===0?' on':'');b.style.setProperty('--c',T.c);b.style.setProperty('--c2',T.c2);b.innerHTML=`<i></i>${T.n}`;
+    b.onclick=()=>{window.selCar=i;el.querySelectorAll('.lv').forEach(x=>x.classList.toggle('on',x===b));click(false)};el.appendChild(b)})})();
 $('#driveBtn').onclick=()=>driving?stopDrive():window.startDrive();
 const KM={arrowup:'up',w:'up',arrowdown:'down',s:'down',arrowleft:'left',a:'left',arrowright:'right',d:'right'};
 window.driveKey=(e,down)=>{if(!driving||!trackVisible)return false;const k=e.key.toLowerCase();
