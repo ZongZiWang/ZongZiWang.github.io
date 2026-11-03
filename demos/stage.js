@@ -30,7 +30,9 @@
   @media (max-width:760px){
     .stage-ov{padding:10px 0 0;gap:8px;justify-content:flex-start}
     .stage-top{padding:0 12px}
-    .stage-top .cap{font-size:11px}
+    .stage-top .cap{font-size:11px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .stage-top .cap.open{display:block}
+    .stage-top b{font-size:13px}
     .stage-x{padding:10px 14px;min-height:40px;white-space:nowrap;flex:none}
     .stage-fit.pan{overflow:auto;-webkit-overflow-scrolling:touch;align-items:flex-start;justify-content:flex-start;padding:0 10px 10px}
     .stage-dev.phone,.stage-dev.tablet{border-radius:0;padding:0;border:0;background:none}
@@ -59,7 +61,8 @@
     try{d=await load(id)}catch(e){ov.querySelector('.stage-fit').innerHTML=`<div class="stage-err">${e.message}</div>`;return}
     if(!current||current.ov!==ov)return;
     const kind=d.frame||'browser',[W,H]=SIZES[kind];
-    ov.querySelector('.t').textContent=d.title||id;ov.querySelector('.cap').textContent=d.caption||'';
+    ov.querySelector('.t').textContent=d.title||id;const cap=ov.querySelector('.cap');cap.textContent=d.caption||'';
+    cap.onclick=()=>{cap.classList.toggle('open');current&&current.fit&&current.fit()};
     const dev=document.createElement('div');dev.className='stage-dev '+kind;
     const root=document.createElement('div');root.className='stage-root demo-'+id;root.style.width=W+'px';root.style.height=H+'px';root.tabIndex=0;
     if(kind==='browser'){dev.innerHTML=`<div class="chrome"><i></i><i></i><i></i><span>${d.url||''}</span></div>`;dev.appendChild(root)}
@@ -67,7 +70,7 @@
     const fitBox=ov.querySelector('.stage-fit');
     const sizer=document.createElement('div');sizer.style.cssText='position:relative;flex:none';sizer.appendChild(dev);fitBox.appendChild(sizer);
     const hint=document.createElement('div');hint.className='stage-hint';ov.insertBefore(hint,fitBox);
-    dev.style.transformOrigin='0 0';
+    dev.style.transformOrigin='0 0';dev.style.position='absolute';dev.style.left='0';dev.style.top='0';dev.style.width='max-content';
     // natural size of the device (unscaled)
     const nat=()=>{dev.style.transform='none';const r=dev.getBoundingClientRect();return[r.width,r.height]};
     const fit=()=>{const [w,h]=nat();const box=fitBox.getBoundingClientRect();
