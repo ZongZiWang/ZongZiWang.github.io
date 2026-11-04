@@ -422,7 +422,7 @@ document.addEventListener('keyup',e=>{if(window.demoOpen)return;if(window.driveK
 /* timing tower */
 const laps=[
  {team:'Harvey',c:'#ff5a1f',role:'Engineering Lead, Spectre',time:'Feb 2026 –',p1:true,d:['Leading Harvey\'s internal collaborative cloud agent platform.','Slack / web / automation → durable sandboxed runs → reviewable diffs and PRs.','Connected to GitHub, Datadog, Linear through explicit boundaries.']},
- {team:'Harvey',c:'#ff5a1f',role:'Engineering Lead, Mobile & Voice',time:'2025 – 2026',d:['Built Agent Builder (Workflow Builder) for legal teams.','Kicked off Voice Agent and native iOS / Android, grew it into a product team.','Native Docx editor on long-horizon agents.']},
+ {team:'Harvey',c:'#ff5a1f',role:'Engineering Lead, Mobile & Voice',time:'2025 – 2026',d:['Led Workflow Builder for legal teams (2025).','Kicked off Voice Agent and native iOS / Android, grew it into a product team.','Native Docx editor on long-horizon agents.']},
  {team:'Harvey',c:'#ff5a1f',role:'Founding Engineer → Eng Lead, Vault',time:'– 2025',d:['Secure, high-volume document review and analysis.','Review workflows, Knowledge Bases, cell-level verification, localized outputs.']},
  {team:'RealChar',c:'#7c5cff',role:'AI Engineer & Product Lead (open source)',time:'2023',d:['Architected and built the iOS app.','AI integrations and partnerships (e.g. Quivr).','5.5k+ GitHub stars, AGI House hackathon win.']},
  {team:'Figma',c:'#a259ff',role:'Founding Mobile Engineer & Tech Lead',time:'',d:['Grew the mobile team from 1 to 20 engineers.','Built FigJam on iOS.']},
@@ -444,8 +444,9 @@ const TEAMS={
 };
 const GRID=[
  {id:'spectre',t:'harvey',name:'Spectre',yr:'2026 –',role:'Engineering lead',desc:"Harvey's internal collaborative cloud agent platform. A request starts in Slack, the web app or an automation, runs as a durable job in an isolated sandbox, and comes back as a diff, branch or PR."},
- {id:'vault',t:'harvey',name:'Vault',yr:'– 2025',role:'Founding engineer → eng lead',desc:'Secure, high-volume document review and analysis for legal teams: review workflows, Knowledge Bases, cell-level verification, localized outputs.',link:'https://harvey.ai/products/vault'},
- {id:'agent-builder',t:'harvey',name:'Agent Builder',yr:'2025 – 2026',role:'Engineering lead',desc:'Also known as Workflow Builder. Lets legal teams turn proprietary knowledge into structured, reusable AI workflows.'},
+ {id:'vault',t:'harvey',name:'Vault',yr:'2024 – 2025',role:'Founding engineer → eng lead',desc:'Secure project workspaces for legal documents: store and organize up to 100,000 files per vault, ask questions across all of them with cited answers, extract data from thousands of documents at once in review tables, and share with colleagues under fine-grained permissions. Built Vault from its first page.',link:'https://harvey.ai/products/vault'},
+ {id:'agent-builder',t:'harvey',name:'Agent Builder',yr:'2026 · Harvey II',role:'Core engineer',desc:"Harvey II's text-based Agent Builder: describe the agent you want in plain language and refine it like briefing an associate, without blocks or a canvas. Built the Agents page and builder landing, the Instructions editor experience, publishing and version safeguards, scheduling, and import/export."},
+ {id:'workflow-builder',t:'harvey',name:'Workflow Builder',yr:'2025',role:'Engineering lead',desc:'Block-based builder that lets legal teams turn proprietary know-how into reusable workflows: user inputs, AI steps, conditional logic and formatted outputs, published to the whole workspace. Built the conditional block, builder panels and the publishing flow.'},
  {id:'mobile-voice',t:'harvey',name:'Mobile & Voice',yr:'2025 – 2026',role:'Engineering lead',desc:"Kicked off Harvey's voice agent and native iOS / Android apps, and grew it into an official product team."},
  {id:'figjam-ios',t:'figma',name:'FigJam on iOS',yr:'Figma',role:'Founding mobile engineer & TL',desc:'Brought FigJam to iPhone and iPad.'},
  {id:'figma-mobile',t:'figma',name:'Figma Mobile',yr:'Figma',role:'Tech lead',desc:'Founding mobile engineer. Grew the mobile team from 1 to 20 engineers.'},
